@@ -1,17 +1,16 @@
-using Matrix;
+using System.Diagnostics;
 using Solution;
 
 namespace app
 {
     public partial class Form1 : Form
     {
-        private TwoDimensionalMatrix matrixA;
-        private OneDimensionalMatrix matrixB;
-        private TwoDimensionalMatrix matrixL;
-        private TwoDimensionalMatrix matrixU;
-        private OneDimensionalMatrix matrixX;
+        private double[,] matrixA;
+        private double[] matrixB;
+        private double[,] matrixL;
+        private double[,] matrixU;
+        private double[] matrixX;
 
-       
         private LuMethod luMethod;
         public int Size { get; set; }
 
@@ -32,34 +31,24 @@ namespace app
             dataGridViewX.ColumnCount = 1;
 
             clearDataGridViews();
-            FillInMatrixAByTestData();  // I'll clear up it later
         }
-
 
         private void btn_solve_Click(object sender, EventArgs e)
         {
-            matrixA = new TwoDimensionalMatrix(Size, Size);
-            matrixB = new OneDimensionalMatrix(Size);
-            matrixL = new TwoDimensionalMatrix(Size, Size);
-            matrixU = new TwoDimensionalMatrix(Size, Size);
-            matrixX = new OneDimensionalMatrix(Size);
+            matrixA = new double[Size, Size];
+            matrixB = new double[Size];
+            matrixL = new double[Size, Size];
+            matrixU = new double[Size, Size];
+            matrixX = new double[Size];
 
-            try
-            {
                 SetMatrixA();
                 SetMatrixB();
-                luMethod = new LuMethod(matrixA.GetMatrix(), matrixB.GetMatrix(), Size);
-                matrixU = new TwoDimensionalMatrix(luMethod.GetUMatrix());
-                matrixL = new TwoDimensionalMatrix(luMethod.GetLMatrix());
-                matrixX = new OneDimensionalMatrix(luMethod.GetXMatrix());
+                luMethod = new LuMethod(matrixA, matrixB, Size);
+                matrixU = (luMethod.GetUMatrix());
+                matrixL = (luMethod.GetLMatrix());
+                matrixX = (luMethod.GetXMatrix());
                 FillInDataGridViewLU();
-                FillInDataGridViewX();
-            }
-            catch (FormatException)
-            {
-                labelError.Text = "*Try to enter only number in the matrixes.";
-            }
-            
+                FillInDataGridViewX();            
         }
 
         private void SetMatrixA()
@@ -68,8 +57,17 @@ namespace app
             {
                 for (int j = 0; j < Size; j++)
                 {
-                    double value = Convert.ToDouble(dataGridViewA[j, i].Value);
-                    matrixA.SetItem(value, i, j);
+                    try
+                    {
+                        double value = Convert.ToDouble(dataGridViewA[j, i].Value);
+                        matrixA[i, j] = value;
+                    }
+                    catch (FormatException ex)
+                    {
+                        MessageBox.Show($"In the matrix \"A\" was made the mistake at the position - {i},{j}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        i = Size; 
+                        j = Size;
+                    }
                 }
             }
         }
@@ -78,19 +76,23 @@ namespace app
         {
             for (int i = 0; i < Size; i++)
             {
-                double value = Convert.ToDouble(dataGridViewB[0, i].Value);
-                matrixB.SetItem(value, i);
+                try
+                {
+                    double value = Convert.ToDouble(dataGridViewB[0, i].Value);
+                    matrixB[i] = value;
+                }
+                catch (FormatException ex)
+                {
+                    MessageBox.Show($"In the matrix \"B\" was made the mistake at the position - {i}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    i = Size;
+                }
             }
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-
-            matrixA.ClearMatrix();
-            matrixB.ClearMatrix();
             clearDataGridViews();
         }
-
 
         private void clearDataGridViews()
         {
@@ -107,7 +109,6 @@ namespace app
                 dataGridViewX[0, i].Value = String.Empty;
             }
         }
-        
 
         private void FillInDataGridViewsExtraZeros()
         {
@@ -132,23 +133,28 @@ namespace app
             {
                 for (int j = 0; j < Size; j++)
                 {
-                    dataGridViewL[j, i].Value = matrixL.GetItem(i, j);
-                    dataGridViewU[j, i].Value = matrixU.GetItem(i, j);
+                    dataGridViewL[j, i].Value = matrixL[i, j];
+                    dataGridViewU[j, i].Value = matrixU[i, j];
                 }
             }
         }
         
         public void FillInDataGridViewX()
         {
+            Boolean hasSolution = true;
             for (int i = 0; i < Size; i++)
             {
-                double item = matrixX.GetItem(i);
+                double item = matrixX[i];
                 if ( Double.IsNaN(item))
                 {
-                    MessageBox.Show("The equation has no solutions");
-                    break;
+                    hasSolution = false;
                 }
                 dataGridViewX[0, i].Value = item;
+            }
+
+            if(!hasSolution)
+            {
+                MessageBox.Show("The equation has no solutions", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -171,16 +177,88 @@ namespace app
             FillInDataGridViewsExtraZeros();
         }
 
-        private void FillInMatrixAByTestData()
+        private async void btnSave_Click(object sender, EventArgs e)
         {
-            Random rnd = new Random();
-            for (int i = 0; i < Size; i++)
+            string path = Directory.GetCurrentDirectory();
+
+            saveFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFileDialog.FilterIndex = 1;
+            saveFileDialog.Title = "Browse Text Files";
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.FileName = "result.txt";
+            saveFileDialog.CheckPathExists = true;
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                for(int j = 0; j < Size; j++)
+                try
                 {
-                    dataGridViewA[j, i].Value = rnd.Next(1, 100);
+                    var myStream = saveFileDialog.OpenFile();
+
+                    if (myStream != null)
+                    {
+                        using (StreamWriter sw = new StreamWriter(myStream))
+                        {
+                            await sw.WriteLineAsync("=== Answer ===");
+                            for (int i = 0; i < Size; i++)
+                            {
+                                sw.WriteLine($"x{ i + 1 } = { dataGridViewX[0, i].Value }");
+                            }
+                        }
+                    }
                 }
-                dataGridViewB[0, i].Value = rnd.Next(1, 100);
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+           
+        private async void btnLoad_Click(object sender, EventArgs e)
+        {
+            string path = Directory.GetCurrentDirectory();
+
+            openFileDialog.InitialDirectory = path;
+            openFileDialog.RestoreDirectory = true;
+            openFileDialog.Title = "Browse Text Files";
+            openFileDialog.FileName = "input data";
+            openFileDialog.DefaultExt = "txt";
+            openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.CheckFileExists = true;
+            openFileDialog.CheckPathExists = true;
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    //Read the contents of the file into a stream
+                    var fileStream = openFileDialog.OpenFile();
+
+                    using (StreamReader reader = new StreamReader(fileStream))
+                    {
+                        string? line;
+                        int j = 0;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            if (line.Contains("=") || line == String.Empty)
+                            {
+                                continue;
+                            }
+
+                            string[] test = line.Trim().Split(" ");
+                            for (int i = 0; i < Size ; i++)
+                            {
+                                dataGridViewA[i, j].Value = test[i];
+                            }
+                            dataGridViewB[0, j].Value = test[^1];
+                            j++;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }
