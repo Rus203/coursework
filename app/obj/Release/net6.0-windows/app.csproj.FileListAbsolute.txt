@@ -1,0 +1,17 @@
+C:\Users\Elect\Desktop\code\coursework\app\bin\Release\net6.0-windows\app.exe
+C:\Users\Elect\Desktop\code\coursework\app\bin\Release\net6.0-windows\app.deps.json
+C:\Users\Elect\Desktop\code\coursework\app\bin\Release\net6.0-windows\app.runtimeconfig.json
+C:\Users\Elect\Desktop\code\coursework\app\bin\Release\net6.0-windows\app.dll
+C:\Users\Elect\Desktop\code\coursework\app\bin\Release\net6.0-windows\app.pdb
+C:\Users\Elect\Desktop\code\coursework\app\obj\Release\net6.0-windows\app.csproj.AssemblyReference.cache
+C:\Users\Elect\Desktop\code\coursework\app\obj\Release\net6.0-windows\app.Form1.resources
+C:\Users\Elect\Desktop\code\coursework\app\obj\Release\net6.0-windows\app.csproj.GenerateResource.cache
+C:\Users\Elect\Desktop\code\coursework\app\obj\Release\net6.0-windows\app.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Elect\Desktop\code\coursework\app\obj\Release\net6.0-windows\app.AssemblyInfoInputs.cache
+C:\Users\Elect\Desktop\code\coursework\app\obj\Release\net6.0-windows\app.AssemblyInfo.cs
+C:\Users\Elect\Desktop\code\coursework\app\obj\Release\net6.0-windows\app.csproj.CoreCompileInputs.cache
+C:\Users\Elect\Desktop\code\coursework\app\obj\Release\net6.0-windows\app.dll
+C:\Users\Elect\Desktop\code\coursework\app\obj\Release\net6.0-windows\refint\app.dll
+C:\Users\Elect\Desktop\code\coursework\app\obj\Release\net6.0-windows\app.pdb
+C:\Users\Elect\Desktop\code\coursework\app\obj\Release\net6.0-windows\app.genruntimeconfig.cache
+C:\Users\Elect\Desktop\code\coursework\app\obj\Release\net6.0-windows\ref\app.dll

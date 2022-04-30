@@ -40,6 +40,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.dataGridViewA = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.btnSolve = new System.Windows.Forms.Button();
@@ -107,9 +108,9 @@
             this.label1.Font = new System.Drawing.Font("Times New Roman", 18F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
             this.label1.Location = new System.Drawing.Point(238, 30);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(679, 41);
+            this.label1.Size = new System.Drawing.Size(846, 41);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Решение СЛАУ методом LU-разложения";
+            this.label1.Text = "Solving a system of equations using LU - decomposition";
             // 
             // btnSolve
             // 
@@ -478,10 +479,11 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "LU - decomposion";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewA)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX)).EndInit();
